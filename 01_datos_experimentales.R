@@ -48,20 +48,17 @@ wth_data_exp <- data %>% mutate(wth_data = map(data, ~.x$WTH_obs)) %>%
   select(localidad, wth_data) %>% 
 #  group_by(localidad) %>% slice(1) %>% 
   unnest(wth_data) %>% mutate(DATE = as.Date(DATE), wspd = as.numeric(WVEL)) %>% 
-  set_names(tolower(names(.))) %>% dplyr::select(-wvel)
-
-
-# subset wth data
-wth_data <- wth_data_exp %>% dplyr::distinct() %>% 
+  set_names(tolower(names(.))) %>% dplyr::select(-wvel) %>%
+  dplyr::distinct() %>% 
   nest(data = -c(localidad:ws_id)) 
 #%>%  mutate(plot_na = map2(loc_id, data, plot_na_wth))
 
 
-plot_na_wth("test", wth_data$data[[1]])
 
 ### plot NA
 
-map2(wth_data$loc_id, wth_data$data, ~vis_miss(dplyr::select(.y, -date), warn_large_data = F) +
+map2(wth_data_exp$loc_id, wth_data_exp$data, 
+     ~vis_miss(dplyr::select(.y, -date), warn_large_data = F) +
   #  facet_wrap(id ~.)
   labs(title = .x) +
   scale_y_continuous(breaks = seq(0, length(.y$date), by = 366), 
@@ -74,6 +71,7 @@ map2(wth_data$loc_id, wth_data$data, ~vis_miss(dplyr::select(.y, -date), warn_la
 
 ##Crear Archivos climaticos
 
+
 dir.create("data")
 left_join(loc, wth_data) %>% mutate(path = "data/", stn = 1) %>%
   rename(lat = LATITUD, lon =  LONGITUD, elev = ASNM, id_name = loc_id) %>%
@@ -81,15 +79,58 @@ left_join(loc, wth_data) %>% mutate(path = "data/", stn = 1) %>%
   mutate(pwalk(., write_wth_oryza))
 
 
+#crear archivos experimentales
+out_path <- paste0(getwd(), "/data/OUTPUTS/EXP/")
+dir.create(out_path, showWarnings = FALSE)
+
+map(data$data, ~write_exp_oryza(.x, out_path))
+
+exp_files <- list.files(out_path)
+
+
+for(y in 1:length(data$data)){
+  
+  data$data[[y]]$PLANT_gro = data$data[[y]]$PLANT_gro %>% 
+    set_names(colnames(data$data[[y]]$PLANT_gro) %>% 
+                str_replace_all(pattern = "_S_SD", replacement = "_SE") %>% 
+                str_replace_all(pattern = "_SD", replacement = "_SE"))}
+
+
+
+#Extract data by component
+
+# Crop Phenology
+phen <- extract_obs_var(data$data, "phen")
+
+#Leaf Area Index
+lai <- extract_obs_var(data$data, "lai")
+
+#Shoot Dry Matter
+dry_matter <- extract_obs_var(data$data, "dry_matter")
+
+#Yield dry matter
+yield <- extract_obs_var(data$data, "yield")
 
 
 
 
+set <- exp_files%>%
+  str_sub(1,-5) %>% enframe(name = NULL, value = "exp_file") %>%
+  separate(exp_file, c("LOC_ID", "CULTIVAR","PROJECT", "TR_N"), sep = "_", remove = F) %>%
+  mutate(ID = paste0(LOC_ID, TR_N, PROJECT))
+
+
+obs_data <- obs_data %>%
+  map(., ~.[[vars]]) %>%
+  bind_rows() %>% 
+  dplyr::select(-LOC_ID, -CULTIVAR) %>%
+  nest(-c(ID)) %>% right_join(set, by= "ID") %>% unnest(data) %>%
+  select(-c(LOC_ID, CULTIVAR, PROJECT, TR_N)) 
 
 
 
-
-
-
+    
+    
+    
 
 
