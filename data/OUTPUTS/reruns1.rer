@@ -1,0 +1,24 @@
+********************
+
+* Rerun set 1  -  VVME_FED67_EPOCAS19_EPOCA1.exp
+FILEIT = 'EXP\VVME_FED67_EPOCAS19_EPOCA1.exp'
+FILEI1 = 'standard.crp'
+
+********************
+
+* Rerun set 2  -  VVME_FED67_EPOCAS17_EPOCA3.exp
+FILEIT = 'EXP\VVME_FED67_EPOCAS17_EPOCA3.exp'
+FILEI1 = 'standard.crp'
+
+********************
+
+* Rerun set 3  -  VVME_FED67_EPOCAS19_EPOCA5.exp
+FILEIT = 'EXP\VVME_FED67_EPOCAS19_EPOCA5.exp'
+FILEI1 = 'standard.crp'
+
+********************
+
+* Rerun set 4  -  VVME_FED67_EPOCAS19_EPOCA3.exp
+FILEIT = 'EXP\VVME_FED67_EPOCAS19_EPOCA3.exp'
+FILEI1 = 'standard.crp'
+

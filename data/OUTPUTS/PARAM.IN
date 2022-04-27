@@ -1,0 +1,17 @@
+*PARAMFILE = PARAM.in
+strun = 1
+*endrun = 72
+*----------------------------------------------------------------------*
+* control file for ORYZA model AUTOCOLIBRATION                         *
+*----------------------------------------------------------------------*
+FILEOP = 'PARAM.OUT'
+FILEOR = 'DRATE.OUT'
+FILEOL = 'MODEL.LOG'
+FILEIR = 'reruns2.rer'
+FILEIT = 'EXP\VVME_FED67_EPOCAS19_EPOCA1.exp'
+FILEI1 = 'standard.crp'
+PRDEL  = 1.
+IPFORM = 5
+COPINF = 'N'
+DELTMP = 'N'
+IFLAG  = 1100

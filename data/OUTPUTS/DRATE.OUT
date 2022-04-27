@@ -1,0 +1,48 @@
+RerunSet            1
+DVRJ, DVRI, DVRP, DVRR !Parameters for crop development.
+DVRJ = 0.0008943
+DVRI = 0.0007576
+DVRP = 0.0004972
+DVRR = 0.0021522
+TSTR, TSPI, TSF,  TSM  !Accumulative scaled temperature.
+        0.00,      777.28,     1481.24,     1945.87
+TGDDTR,TGDDPI,TGDDF,TGDDM  !Accumulative GDD above TBD.
+        0.00,      819.00,     1532.84,     2009.24
+DASTR , DASPI , DASF  , DASM  !Duration to different growth stages.
+        0.00,       43.00,       83.00,      110.00
+RerunSet            2
+DVRJ, DVRI, DVRP, DVRR !Parameters for crop development.
+DVRJ = 0.0009838
+DVRI = 0.0007576
+DVRP = 0.0004779
+DVRR = 0.0029546
+TSTR, TSPI, TSF,  TSM  !Accumulative scaled temperature.
+        0.00,      736.57,     1468.94,     1807.39
+TGDDTR,TGDDPI,TGDDF,TGDDM  !Accumulative GDD above TBD.
+        0.00,      755.85,     1497.26,     1853.13
+DASTR , DASPI , DASF  , DASM  !Duration to different growth stages.
+        0.00,       41.00,       83.00,      102.00
+RerunSet            3
+DVRJ, DVRI, DVRP, DVRR !Parameters for crop development.
+DVRJ = 0.0008300
+DVRI = 0.0007576
+DVRP = 0.0005616
+DVRR = 0.0022437
+TSTR, TSPI, TSF,  TSM  !Accumulative scaled temperature.
+        0.00,      811.92,     1435.17,     1880.86
+TGDDTR,TGDDPI,TGDDF,TGDDM  !Accumulative GDD above TBD.
+        0.00,      827.60,     1461.19,     1934.39
+DASTR , DASPI , DASF  , DASM  !Duration to different growth stages.
+        0.00,       47.00,       83.00,      108.00
+RerunSet            4
+DVRJ, DVRI, DVRP, DVRR !Parameters for crop development.
+DVRJ = 0.0009635
+DVRI = 0.0007576
+DVRP = 0.0003799
+DVRR = 0.0042146
+TSTR, TSPI, TSF,  TSM  !Accumulative scaled temperature.
+        0.00,      745.16,     1666.36,     1903.63
+TGDDTR,TGDDPI,TGDDF,TGDDM  !Accumulative GDD above TBD.
+        0.00,      763.45,     1701.95,     1943.47
+DASTR , DASPI , DASF  , DASM  !Duration to different growth stages.
+        0.00,       42.00,       95.00,      109.00
