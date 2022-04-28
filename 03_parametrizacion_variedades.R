@@ -20,7 +20,7 @@ cal_set <- sample(exp_files, length(exp_files)*0.60)
 eval_set <- setdiff(exp_files, cal_set)
 
 setwd(dir = 'data/OUTPUTS/')
-download_ORYZA_Tools()
+#download_ORYZA_Tools()
 run_drates_param(cal_set)
 extract_drates_param(cal_set)
 
@@ -37,6 +37,6 @@ DVR_plot3(DVR_df, save_plot = "N")  #stat summary
 ## Plots for Biomass Partition ('PF_m1': Oryza_manual,
 #                               'PF_m2: Samurai)
 
-BPART_plot1(PF_m1, save_plot = "N") #all data
+BPART_plot1(PF_m2, save_plot = "N") #all data
 BPART_plot2(PF_m1, save_plot = "N") #facet by site & pf
 BPART_plot3(PF_m1, save_plot = "N") #facet by pf

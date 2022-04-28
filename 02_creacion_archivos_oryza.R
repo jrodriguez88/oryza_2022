@@ -17,7 +17,7 @@ source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_pac
 dir_wth <- "data/OUTPUTS/WTH/"
 dir.create(dir_wth)
 wth_data_exp %>% mutate(wth_data = map(wth_data, ~.x %>% impute_mean_wth)) %>%
-  mutate(pwalk(., write_wth_oryza, multiyear = F, tag = T))
+  mutate(pwalk(., write_wth_oryza, multiyear = F, tag = F))
 
 #crear archivos experimentales
 dir_exp <- paste0("data/OUTPUTS/EXP/")
