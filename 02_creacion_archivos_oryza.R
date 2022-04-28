@@ -6,8 +6,8 @@
 
 
 ### cargar requerimientos
-library(tidyverse)
-library(lubridate)
+#library(tidyverse)
+#library(lubridate)
 source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_package/write_files/write_exp_oryza.R", encoding = "UTF-8")
 source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_package/write_files/write_soil_oryza.R", encoding = "UTF-8")
 source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_package/write_files/write_wth_oryza.R", encoding = "UTF-8")

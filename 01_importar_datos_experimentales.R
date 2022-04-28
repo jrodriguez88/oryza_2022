@@ -32,7 +32,7 @@ file.rename(list.files(path_proj, full.names = T),
 
 
 ## Seleccionar el cultivar
-cultivar <- "F70"
+cultivar <- "F67"
 
 ## seleciconar archivos por cultivar
 files_cultivar <- list.files(path_proj, pattern = fixed(cultivar))
@@ -62,7 +62,7 @@ for(y in 1:length(data$data)){
 
 ## Soil data 
 soil_data <- read_csv(paste0("data/soil_data_final.csv" )) %>%
-  mutate(SAMPLING_DATE = mdy(SAMPLING_DATE))
+  mutate(SAMPLING_DATE = mdy(SAMPLING_DATE)) %>% rename(SC = SCARBON)
 
 soil_by_loc <- soil_data %>% group_by(LOC_ID, DEPTH_range) %>%
   summarize_if(is.numeric, .funs = function(x){
@@ -93,7 +93,7 @@ wth_data_exp <- data %>% mutate(wth_data = map(data, ~.x$WTH_obs)) %>%
   select(path, id_name, wth_data, lat, lon, elev, stn)
 
 
-# plot NA - WTH
+# plot NA - WTH (1 plot por estacion)
 
 map2(wth_data_exp$id_name, wth_data_exp$wth_data, 
      ~vis_miss(dplyr::select(.y, -date), warn_large_data = F) +

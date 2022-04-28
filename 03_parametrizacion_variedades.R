@@ -10,7 +10,6 @@ source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_pac
 
 
 
-
 ### Inputs sample data 
 exp_files <- str_subset(list.files("data/OUTPUTS/EXP/", pattern = "\\.exp$"), "FED67")
 
@@ -19,10 +18,10 @@ set.seed(1234)
 cal_set <- sample(exp_files, length(exp_files)*0.60)    
 eval_set <- setdiff(exp_files, cal_set)
 
-setwd(dir = 'data/OUTPUTS/')
-#download_ORYZA_Tools()
-run_drates_param(cal_set)
-extract_drates_param(cal_set)
+path_cal = 'data/OUTPUTS/'
+download_ORYZA_Tools(path_cal)
+run_drates_param(cal_set, path_cal)
+extract_drates_param(cal_set, path_cal)
 
 
 
