@@ -4,22 +4,26 @@
 # 2022
 
 ### cargar requerimientos
-library(tidyverse)
-library(lubridate)
-library(readxl)
-library(naniar)
-library(plotly)
-library(Hmisc)
+#library(tidyverse)
+#library(lubridate)
+#library(readxl)
+#library(naniar)
+#library(plotly)
+#library(Hmisc)
+
 source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_package/utils/utils_crop_model.R", encoding = "UTF-8")
 source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_package/utils/eval_models.R", encoding = "UTF-8")
 source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_package/graphics/INPUT_data_graphics.R", encoding = "UTF-8")
 
+inpack(c("tidyverse", "lubridate", "readxl", "naniar", "plotly", "Hmisc"))
 
 ###  importar archivos one drive ##### 
-path_data  <- "D:/OneDrive - CGIAR/Projects/ORYZA_2022/00_DATA/"
-path_proj <- "data/INPUTS/"
+path_data_raw  <- "D:/OneDrive - CGIAR/Projects/ORYZA_2022/00_DATA/" # directorio de Onedrive - datos crudos en INPUT_data.xlsx
+path_proj <- "data/INPUTS/" # direcorio para copiar archivos excel de onedrive 
 
-files <- list.files(path_data, recursive = T, full.names = T, pattern = ".xlsx$")
+
+# esa parte solo se corre si voy a importar datos crudos --- if_not saltar a cultivar
+files <- list.files(path_data_raw, recursive = T, full.names = T, pattern = ".xlsx$")
 files %>% map(~file.copy(.x, to = path_proj))
 
 file.rename(list.files(path_proj, full.names = T),
@@ -28,7 +32,7 @@ file.rename(list.files(path_proj, full.names = T),
 
 ######
 
-############################
+############################ ------
 
 
 ## Seleccionar el cultivar
@@ -60,18 +64,19 @@ for(y in 1:length(data$data)){
 
 ###extract data by component 
 
-## Soil data 
+## Soil data ' todas localidades y experimentos MADR
 soil_data <- read_csv(paste0("data/soil_data_final.csv" )) %>%
   mutate(SAMPLING_DATE = mdy(SAMPLING_DATE)) %>% rename(SC = SCARBON)
 
+
+# perfil de suelo agrupado por localidad y profundidad - promedio por bootstraping - ver mean_boot() function 100 reps
 soil_by_loc <- soil_data %>% group_by(LOC_ID, DEPTH_range) %>%
-  summarize_if(is.numeric, .funs = function(x){
-    smean.cl.boot(x, conf.int=.95, B=1000, na.rm=TRUE, reps=T)[1]}) %>%
+  summarize_if(is.numeric, .funs = mean_boot) %>%
   mutate(ID=LOC_ID, STC=get_STC(SAND, CLAY)) %>% ungroup() %>% split(.$ID)
   
 
 
-## Datos climaticos
+## Extraer Datos climaticos
 
 wth_data_exp <- data %>% mutate(wth_data = map(data, ~.x$WTH_obs)) %>% 
   select(localidad, wth_data) %>% 
@@ -124,7 +129,7 @@ plot_drymatter_obs(dry_matter) %>% ggplotly()
 
 #Yield dry matter
 yield <- extract_obs_var(data$data, "yield")
-plot_yield_obs(yield) %>% ggplotly(yield_plot)
+plot_yield_obs(yield) %>% ggplotly()
 
 
     

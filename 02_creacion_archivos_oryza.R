@@ -13,6 +13,9 @@ source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_pac
 source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_package/write_files/write_wth_oryza.R", encoding = "UTF-8")
 
 
+### Directorio de salidas (OUTPUTS)
+dir.create("data/OUTPUTS")
+
 ##Crear Archivos climaticos
 dir_wth <- "data/OUTPUTS/WTH/"
 dir.create(dir_wth)
