@@ -4,8 +4,6 @@
 # 2022
 
 
-library(data.table)
-library(scales)
 source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_package/run_tools/extract_drates_param.R", encoding = "UTF-8")
 source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_package/run_tools/run_drates_param.R", encoding = "UTF-8")
 source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_package/get_model_params/get_params_oryza.R", encoding = "UTF-8")
@@ -38,7 +36,7 @@ tidy_params <- tidy_params_oryza(raw_params, 2)
 
 ###  Development Rates 
 DVR_plot1(tidy_params$DVR_tb, save_plot = "N")   #point
-a <- DVR_plot1(tidy_params$DVR_tb, save_plot = "N") ; ggplotly(a) 
+DVR_plot1(tidy_params$DVR_tb, save_plot = "N") %>% ggplotly() 
 
 ##  Biomass Partition 
 BPART_plot1(tidy_params$PF_tb, save_plot = "N") %>% ggplotly()#all data

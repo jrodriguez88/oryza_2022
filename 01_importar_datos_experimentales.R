@@ -15,7 +15,7 @@ source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_pac
 source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_package/utils/eval_models.R", encoding = "UTF-8")
 source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_package/graphics/INPUT_data_graphics.R", encoding = "UTF-8")
 
-inpack(c("tidyverse", "lubridate", "readxl", "naniar", "plotly", "Hmisc"))
+inpack(c("tidyverse", "data.table", "lubridate", "readxl", "naniar", "plotly", "Hmisc", "soiltexture", "scales"))
 
 ###  importar archivos one drive ##### 
 path_data_raw  <- "D:/OneDrive - CGIAR/Projects/ORYZA_2022/00_DATA/" # directorio de Onedrive - datos crudos en INPUT_data.xlsx
@@ -47,7 +47,7 @@ sites <- str_sub(files_cultivar, 1,4)
 ## Inporta datos de trabajo
 data <- files_cultivar %>% 
   enframe(name = NULL, value = "file") %>%
-    mutate(loc_cul = str_sub(file, 1,-6)) %>% 
+  mutate(loc_cul = str_sub(file, 1,-6)) %>% 
   separate(col = loc_cul, into = c("localidad", "cultivar"), sep = "_") %>%
   mutate(data =  map(file, ~read_INPUT_data(paste0(path_proj, .))))
 
@@ -73,14 +73,14 @@ soil_data <- read_csv(paste0("data/soil_data_final.csv" )) %>%
 soil_by_loc <- soil_data %>% group_by(LOC_ID, DEPTH_range) %>%
   summarize_if(is.numeric, .funs = mean_boot) %>%
   mutate(ID=LOC_ID, STC=get_STC(SAND, CLAY)) %>% ungroup() %>% split(.$ID)
-  
+
 
 
 ## Extraer Datos climaticos
 
 wth_data_exp <- data %>% mutate(wth_data = map(data, ~.x$WTH_obs)) %>% 
   select(localidad, wth_data) %>% 
-#  group_by(localidad) %>% slice(1) %>% 
+  #  group_by(localidad) %>% slice(1) %>% 
   unnest(wth_data) %>% 
   mutate(DATE = as.Date(DATE), wspd = suppressWarnings(as.numeric(WVEL))) %>% 
   set_names(tolower(names(.))) %>% dplyr::select(-wvel) %>%
@@ -102,13 +102,13 @@ wth_data_exp <- data %>% mutate(wth_data = map(data, ~.x$WTH_obs)) %>%
 
 map2(wth_data_exp$id_name, wth_data_exp$wth_data, 
      ~vis_miss(dplyr::select(.y, -date), warn_large_data = F) +
-  #  facet_wrap(id ~.)
-  labs(title = .x) +
-  scale_y_continuous(breaks = seq(0, length(.y$date), by = 366), 
-                     labels = cut.Date(.y$date, breaks = "1 years") %>% 
-                       unique() %>% year()) +
-  coord_flip() +
-  theme(axis.text.x = element_text(angle = 0)))
+       #  facet_wrap(id ~.)
+       labs(title = .x) +
+       scale_y_continuous(breaks = seq(0, length(.y$date), by = 366), 
+                          labels = cut.Date(.y$date, breaks = "1 years") %>% 
+                            unique() %>% year()) +
+       coord_flip() +
+       theme(axis.text.x = element_text(angle = 0)))
 
 
 
