@@ -11,15 +11,15 @@
 #library(plotly)
 #library(Hmisc)
 
-source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_package/utils/utils_crop_model.R", encoding = "UTF-8")
-source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_package/utils/eval_models.R", encoding = "UTF-8")
-source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/r_package/R_package/graphics/INPUT_data_graphics.R", encoding = "UTF-8")
+source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/master/R_package/utils/utils_crop_model.R", encoding = "UTF-8")
+source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/master/R_package/utils/eval_models.R", encoding = "UTF-8")
+source("https://raw.githubusercontent.com/jrodriguez88/agroclimR/master/R_package/graphics/INPUT_data_graphics.R", encoding = "UTF-8")
 
-inpack(c("tidyverse", "data.table", "lubridate", "readxl", "naniar", "plotly", "Hmisc", "soiltexture", "scales"))
+inpack(c("tidyverse", "data.table", "lubridate", "readxl", "naniar", "plotly", "Hmisc", "soiltexture", "scales", "sirad"))
 
 ###  importar archivos one drive ##### 
 path_data_raw  <- "D:/OneDrive - CGIAR/Projects/ORYZA_2022/00_DATA/" # directorio de Onedrive - datos crudos en INPUT_data.xlsx
-path_proj <- "data/INPUTS/" # direcorio para copiar archivos excel de onedrive 
+path_proj <- "data/DATA_FINAL/" # direcorio para copiar archivos excel de onedrive 
 
 
 # esa parte solo se corre si voy a importar datos crudos --- if_not saltar a cultivar
@@ -36,7 +36,7 @@ file.rename(list.files(path_proj, full.names = T),
 
 
 ## Seleccionar el cultivar
-cultivar <- "F67"
+cultivar <- "F2000"
 
 ## seleciconar archivos por cultivar
 files_cultivar <- list.files(path_proj, pattern = fixed(cultivar))
@@ -78,22 +78,24 @@ soil_by_loc <- soil_data %>% group_by(LOC_ID, DEPTH_range) %>%
 
 ## Extraer Datos climaticos
 
-wth_data_exp <- data %>% mutate(wth_data = map(data, ~.x$WTH_obs)) %>% 
-  select(localidad, wth_data) %>% 
+wth_data_exp <- data %>% mutate(ws_id = 1, wth_data = map(data, ~.x$WTH_obs )) %>% 
+  select(localidad, ws_id, wth_data) %>% 
   #  group_by(localidad) %>% slice(1) %>% 
   unnest(wth_data) %>% 
-  mutate(DATE = as.Date(DATE), wspd = suppressWarnings(as.numeric(WVEL))) %>% 
-  set_names(tolower(names(.))) %>% dplyr::select(-wvel) %>%
+  mutate(DATE = as.Date(DATE)) %>%
+#  mutate(wspd = suppressWarnings(as.numeric(WVEL))) %>% ###### si existen ?
+  set_names(tolower(names(.))) %>% 
+#  dplyr::select(-wvel) %>%
   dplyr::distinct() %>% 
-  nest(wth_data = -c(localidad:ws_id)) %>% 
+  nest(wth_data = -c(localidad, ws_id)) %>% 
   left_join(
     
     data$data %>% map("AGRO_man") %>% bind_rows() %>% 
-      dplyr::select(LOC_ID, LATITUD, LONGITUD, ASNM) %>% 
+      dplyr::select(LOC_ID, contains("LAT"), contains("LONG"), starts_with("A")) %>% 
       distinct() %>% set_names(c("localidad", "lat", "lon", "elev")) %>%
       group_by(localidad) %>% slice(1) %>% 
       ungroup(),
-    by = "localidad") %>% rename(id_name = loc_id, stn = ws_id) %>% 
+    by = "localidad") %>% rename(id_name = localidad, stn = ws_id) %>% 
   mutate(path = "data/OUTPUTS/WTH/") %>%
   select(path, id_name, wth_data, lat, lon, elev, stn)
 

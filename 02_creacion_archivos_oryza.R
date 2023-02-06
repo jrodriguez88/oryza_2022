@@ -25,7 +25,7 @@ wth_data_exp %>% mutate(wth_data = map(wth_data, ~.x %>% impute_mean_wth)) %>%
 #crear archivos experimentales
 dir_exp <- paste0("data/OUTPUTS/EXP/")
 dir.create(dir_exp, showWarnings = FALSE)
-map(data$data, ~write_exp_oryza(.x, dir_exp))
+map(data$data, ~write_exp_oryza(.x, dir_exp, ET_mod = "PRIESTLY TAYLOR"))
 
 #crear archivos suelo
 dir_soil <- paste0("data/OUTPUTS/SOIL/")
